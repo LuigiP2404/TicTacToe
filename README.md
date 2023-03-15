@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Tic Tac Toe
 
 This project is hosted at --> https://luigip2404.github.io/TicTacToe/
 
