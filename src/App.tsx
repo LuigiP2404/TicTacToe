@@ -57,7 +57,7 @@ function App() {
         updateWinner('X');
       } else if (p2won) {
         updateWinner('O');
-      } else if (currentRound == 10) {
+      } else if (currentRound == 11) {
         updateWinner('Draw');
       }
     })
