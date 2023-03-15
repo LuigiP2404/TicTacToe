@@ -55,14 +55,13 @@ body {
   color: #fff;
 }
 
-.restart-button {
+.gradient-button {
   background: linear-gradient(270deg, #13ADC7 0%, #6978D1 66.67%, #945DD6 100%);
   padding: 20px 60px;
   border-radius: 42px;
   box-shadow: 0px 8px 22px rgba(0, 178, 255, 0.35);
   color: #fff;
   cursor: pointer;
-  margin-top: 50px;
   display: inline-block;
   font-weight: bold;
   letter-spacing: 0.5px;
@@ -77,4 +76,15 @@ body {
   .cell {
     font-size: 65px;
   }
+}
+
+.flex-row {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mt-50 {
+  margin-top: 50px !important;
 }
