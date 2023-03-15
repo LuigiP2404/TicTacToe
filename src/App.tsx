@@ -50,17 +50,21 @@ function App() {
   const checkWinCondition = () => {
     let p1 = player1;
     let p2 = player2;
+    let winner = null;
     winConditions.forEach(function(winCond) {
       let p1won = winCond.every(elem => p1.includes(elem));
       let p2won = winCond.every(elem => p2.includes(elem));
       if (p1won) {
-        updateWinner('X');
+        winner = 'X';
       } else if (p2won) {
-        updateWinner('O');
-      } else if (currentRound == 11) {
-        updateWinner('Draw');
+        winner = 'O';
       }
     })
+    if (winner) {
+      updateWinner(winner);
+    } else if (currentRound == 10) {
+      updateWinner('Draw');
+    }
   };
 
   const clearTable = () => {
