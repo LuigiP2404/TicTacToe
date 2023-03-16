@@ -11,6 +11,7 @@ function App() {
   const [winner, updateWinner] = useState<string>('');
   const [availableBoard, updateAvailableBoard] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [playMode, updatePlayMode] = useState<string | null>(null);
+  const [gridReady, updateGridReady] = useState<boolean>(true);
 
   const winConditions = [
     [1, 2, 3],
@@ -24,29 +25,32 @@ function App() {
   ];
 
   useEffect(() => {
-    if (currentRound > 5) {
-      checkWinCondition();
-    }
+    checkWinCondition();
   }, [player1, player2]);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>, index: number) => {
-    let indexOf = availableBoard.indexOf(index);
-    if (indexOf >= 0) {
-      availableBoard.splice(availableBoard.indexOf(index), 1);
-      updateAvailableBoard(availableBoard);
-      console.log(availableBoard);
+    if (gridReady) {
+      let indexOf = availableBoard.indexOf(index);
+      if (indexOf >= 0) {
+        availableBoard.splice(availableBoard.indexOf(index), 1);
+        updateAvailableBoard(availableBoard);
+        console.log(availableBoard);
+      }
     }
     if (!winner) {
       const el = event.target as HTMLDivElement;
       if (!el.innerText) {
-        setCurrentRound(currentRound + 1);
         if (playMode === 'manual') {
           playerMove(currentPlayer, index, el);
+          setCurrentRound(currentRound + 1);
         } else {
-          el.innerText = 'X';
-          el.classList.add('green');
-          updatePlayer1([...player1, index]);
-          IAMove();
+          if (gridReady) {
+            el.innerText = 'X';
+            el.classList.add('green');
+            updatePlayer1([...player1, index]);
+            setCurrentPlayer('O');
+            setCurrentRound(currentRound + 1);
+          }
         }
       }
     }
@@ -54,6 +58,7 @@ function App() {
 
   const IAMove = () => {
     if (!winner) {
+      updateGridReady(false);
       setTimeout(() => {
         const randomElement = availableBoard[Math.floor(Math.random() * availableBoard.length)];
         let indexOf = availableBoard.indexOf(randomElement);
@@ -63,12 +68,15 @@ function App() {
           console.log(availableBoard);
         }
         const el = document.getElementById(`cell-${randomElement}`) as HTMLDivElement;
-        el.innerText = 'O';
-        el.classList.add('cyan');
-        updatePlayer2([...player2, randomElement]);
-        setCurrentPlayer('X');
-        setCurrentRound(currentRound + 2);
-      }, 300);   
+        if (el) {
+          el.innerText = 'O';
+          el.classList.add('cyan');
+          updatePlayer2([...player2, randomElement]);
+          setCurrentRound(currentRound + 1);
+          setCurrentPlayer('X');
+        }
+        updateGridReady(true);
+      }, 1000);
     }
   }
 
@@ -89,20 +97,23 @@ function App() {
   const checkWinCondition = () => {
     let p1 = player1;
     let p2 = player2;
-    let winner = null;
+    let winnerVar = null;
     winConditions.forEach(function (winCond) {
       let p1won = winCond.every(elem => p1.includes(elem));
       let p2won = winCond.every(elem => p2.includes(elem));
       if (p1won) {
-        winner = 'X';
+        winnerVar = 'X';
       } else if (p2won) {
-        winner = 'O';
+        winnerVar = 'O';
       }
     })
-    if (winner) {
-      updateWinner(winner);
+    if (winnerVar) {
+      updateWinner(winnerVar);
     } else if (currentRound == 10) {
       updateWinner('Draw');
+    }
+    if (playMode == 'IA' && !winnerVar && currentPlayer == 'O') {
+      IAMove();
     }
   };
 
@@ -125,6 +136,7 @@ function App() {
     updateWinner('');
     clearTable();
     updatePlayMode(null);
+    updateAvailableBoard([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   };
 
   return (
@@ -136,7 +148,7 @@ function App() {
         {winner ? <React.Fragment>
           {winner == 'X' || winner == 'O' ? <h2>Winner: {winner == 'X' ? <span className="green">{winner}</span> : <span className="cyan">{winner}</span>}</h2> : <h2>Draw</h2>}
         </React.Fragment> : null}
-        <h2>Current round: {currentRound}</h2>
+        {winner ? null : <h2>Current round: {currentRound}</h2>}
         <div className="grid">
           <div className="row">
             <div className="cell" id="cell-1" onClick={(e) => { handleClick(e, 1) }}>
