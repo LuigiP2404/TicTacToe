@@ -56,11 +56,16 @@ function App() {
     }
   };
 
-  const IAMove = () => {
+  const IAMove = (spot?: number|null) => {
     if (!winner) {
       updateGridReady(false);
       setTimeout(() => {
-        const randomElement = availableBoard[Math.floor(Math.random() * availableBoard.length)];
+        let randomElement = null;
+        if (!spot) {
+          randomElement = availableBoard[Math.floor(Math.random() * availableBoard.length)];
+        } else {
+          randomElement = spot;
+        }
         let indexOf = availableBoard.indexOf(randomElement);
         if (indexOf >= 0) {
           availableBoard.splice(availableBoard.indexOf(randomElement), 1);
@@ -79,6 +84,51 @@ function App() {
       }, 1000);
     }
   }
+
+  // const minimaxMove = (board?: number[] | null, player?: string | null) => {
+  //   if (!board || (board && board.length === 0)) {
+  //     board = availableBoard;
+  //   }
+  //   if (!player) {
+  //     player = currentPlayer;
+  //   }
+  //   let bestScore = (player === 'X') ? -Infinity : Infinity;
+  //   let bestMove = null;
+
+  //   availableBoard.forEach((free) => {
+  //     if (player == 'X') {
+  //       updatePlayer1([...player1, free]);
+  //     } else {
+  //       updatePlayer2([...player2, free]);
+  //     }
+  //     let indexOf = availableBoard.indexOf(free);
+  //     let updatedBoard:number[] = [];
+  //     if (indexOf >= 0) {
+  //       updatedBoard = availableBoard.splice(availableBoard.indexOf(free), 1);
+  //       updateAvailableBoard(updatedBoard);
+  //     }
+  //     let score = minimaxMove(updatedBoard, (player == 'X') ? 'O' : 'X');
+  //     if (player == 'X') {
+  //       let updatedArr = player1.splice(free, 1);
+  //       updatePlayer1(updatedArr);
+  //     } else {
+  //       let updatedArr = player2.splice(free, 1);
+  //       updatePlayer2(updatedArr);
+  //     }
+  //     if (player === 'X') {
+  //       if (score && score > bestScore) {
+  //         bestScore = score;
+  //         bestMove = free;
+  //       }
+  //     } else {
+  //       if (score && score < bestScore) {
+  //         bestScore = score;
+  //         bestMove = free;
+  //       }
+  //     }
+  //   })
+  //   return bestMove;
+  // };
 
   const playerMove = (player: string, index: number, el: HTMLDivElement) => {
     if (player == 'X') {
@@ -113,6 +163,7 @@ function App() {
       updateWinner('Draw');
     }
     if (playMode == 'IA' && !winnerVar && currentPlayer == 'O') {
+     // let spot = minimaxMove();
       IAMove();
     }
   };
