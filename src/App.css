@@ -65,17 +65,7 @@ body {
   display: inline-block;
   font-weight: bold;
   letter-spacing: 0.5px;
-}
-
-@media all and (max-width: 640px) {
-  .grid {
-    width: 315px;
-    height: 315px;
-  }
-
-  .cell {
-    font-size: 65px;
-  }
+  min-width: 90px;
 }
 
 .flex-row {
@@ -87,4 +77,19 @@ body {
 
 .mt-50 {
   margin-top: 50px !important;
+}
+
+@media all and (max-width: 640px) {
+  .grid {
+    width: 315px;
+    height: 315px;
+  }
+
+  .cell {
+    font-size: 65px;
+  }
+
+  .flex-row {
+    flex-direction: column;
+  }
 }
